@@ -20,6 +20,8 @@ use Propel\Runtime\Propel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\TheliaEvents;
 use \Thelia\Core\Event\TheliaFormEvent;
+use Thelia\Log\Tlog;
+use DocumentsSharing\DocumentsSharing;
 
 /**
  * Class DocumentsSharingDocumentAction
@@ -28,6 +30,8 @@ use \Thelia\Core\Event\TheliaFormEvent;
  */
 class DocumentsSharingDocumentAction extends BaseAction implements EventSubscriberInterface
 {
+    protected $log = null;
+
     public function create(DocumentsSharingDocumentEvent $event)
     {
         $this->createOrUpdate($event, new DocumentsSharingDocument());
@@ -139,11 +143,37 @@ class DocumentsSharingDocumentAction extends BaseAction implements EventSubscrib
         $documentId = $event->getId();
         $file = DocumentsSharingDocumentQuery::create()->findPk($documentId);
         if(count($file)){
-            $filename = basename($file->getFile());
+            $filename = preg_replace("/^h(.*?)(upload)\//", '',$file->getFile());
             $folder = THELIA_WEB_DIR.'media'.DS.'documentssharing'.DS.'upload';
-            $source_filepath = $folder.DS.$filename;
+            $source_filepath = $folder.DS.urldecode($filename);
+            $source_filepath = str_replace('/', DS, $source_filepath);
             unlink($source_filepath);
+            $this->getLog()->addInfo("INFO Delete file ID:".$documentId."  path:".$source_filepath);
         }
+    }
+
+    protected function getLog()
+    {
+        if ($this->log == null) {
+            $this->log = Tlog::getNewInstance();
+
+            $logFilePath = $this->getLogFilePath();
+
+            $this->log->setPrefix("#LEVEL: #DATE #HOUR: ");
+            $this->log->setDestinations("\\Thelia\\Log\\Destination\\TlogDestinationFile");
+            $this->log->setConfig("\\Thelia\\Log\\Destination\\TlogDestinationFile", 0, $logFilePath);
+            $this->log->setLevel(Tlog::INFO);
+        }
+
+        return $this->log;
+    }
+
+    /**
+     * @return string The path to the module's log file.
+     */
+    protected function getLogFilePath()
+    {
+        return sprintf(THELIA_ROOT."log".DS."%s.log", DocumentsSharing::MESSAGE_DOMAIN);
     }
 
     /**
