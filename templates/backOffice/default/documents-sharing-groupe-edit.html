@@ -1,0 +1,70 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='documentssharing.bo.default'}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='DocumentsSharingGroupe' d='documentssharing.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}update{/block}
+{block name="check-module"}DocumentsSharing{/block}
+
+{block name="main-content"}
+
+    {form name="documents_sharing_groupe.update"}
+        <div id="wrapper" class="container">
+
+            {if $form_error}
+                <div class="alert alert-danger">{$form_error_message}</div>
+            {/if}
+
+            <div class="general-block-decorator">
+                <div class="title title-without-tabs">
+                    {intl l="DocumentsSharingGroupe edit" d="documentssharing.bo.default"}
+                </div>
+
+                <div class="form-container">
+                    <form method="POST" action="{$current_url}" {form_enctype form=$form} class="clearfix" >
+
+                        {include "includes/inner-form-toolbar.html"
+                        hide_flags = true
+                        page_url = {url path="/admin/module/DocumentsSharing/documents_sharing" current_tab="groupes"}
+                        close_url = {url path="/admin/module/DocumentsSharing/documents_sharing" current_tab="groupes"}
+                        }
+
+                        {form_field form=$form field="id"}
+                        {assign "documents_sharing_groupe_id" $value}
+                            <input type="hidden" name="{$name}" value="{$value}"/>
+                        {/form_field}
+                        {form_field form=$form field="success_url"}
+                            <input type="hidden" name="{$name}" value="{url path='/admin/module/DocumentsSharing'}/documents_sharing_groupe"/>
+                        {/form_field}
+                        {form_hidden_fields form=$form}
+
+                        {loop name="documents_sharing_groupe_update" type="documents-sharing-groupe" backend_context="yes" id=$documents_sharing_groupe_id lang=$edit_language_id}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {render_form_field form=$form field="title"}
+
+                                    {render_form_field form=$form field='customer_id'}
+
+                                    {include "includes/inner-form-toolbar.html"
+                                        hide_flags = true
+                                        close_url = {url path="/admin/module/DocumentsSharing/documents_sharing_groupe"}
+                                    }
+
+                                </div>
+                            </div>
+                        {/loop}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    {/form}
+{/block}
+
+{block name="javascript-initialization"}
+{/block}

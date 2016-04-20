@@ -1,0 +1,112 @@
+<!-- DocumentsSharingGroupe list -->
+<div class="general-block-decorator">
+    <div class="table-responsive">
+        <table class="table table-striped table-condensed" id="documents_sharing_groupe-table">
+            <caption class="clearfix">
+                {intl l="Documents sharing groupe" d='documentssharing.bo.default'}
+
+                {loop name="auth-create-group" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="DocumentsSharing"}
+                <div class="pull-right">
+                    <a class="btn btn-default btn-primary" title="{intl l='Create a new DocumentsSharingGroupe entry' d='documentssharing.bo.default'}" data-target="#documents_sharing_groupe-create" data-toggle="modal">
+                        <i class="glyphicon glyphicon-plus-sign"></i>
+                    </a>
+                </div>
+                {/loop}
+            </caption>
+
+            <thead>
+            <tr>
+                <th>
+                    {admin_sortable_header
+                    current_order=$order
+                    order='id'
+                    reverse_order='id-reverse'
+                    path={url path='/admin/module/DocumentsSharing/documents_sharing_groupe' target='documents_sharing_groupe-table'}
+                    label="{intl l='Id' d='documentssharing.bo.default'}"
+                    }
+                </th>
+                <th>
+                    {admin_sortable_header
+                    current_order=$order
+                    order='title'
+                    reverse_order='title-reverse'
+                    path={url path='/admin/module/DocumentsSharing/documents_sharing_groupe' target='documents_sharing_groupe-table'}
+                    label="{intl l='Title' d='documentssharing.bo.default'}"
+                    }
+                </th>
+                <th>
+                    {admin_sortable_header
+                    current_order=$order
+                    order='customer_id'
+                    reverse_order='customer_id-reverse'
+                    path={url path='/admin/module/DocumentsSharing/documents_sharing_groupe' target='documents_sharing_groupe-table'}
+                    label="{intl l='CustomerId' d='documentssharing.bo.default'}"
+                    }
+                </th>
+                <th>
+                    {intl l="Actions"}
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {loop name="documents-sharing-groupe-list" type="documents-sharing-groupe" order=$order}
+            <tr>
+                <td>
+                    <a href="{url path='/admin/module/DocumentsSharing/documents_sharing_groupe/edit' documents_sharing_groupe_id=$ID}">{$ID}</a>
+                </td>
+                <td>
+                    <a href="{url path='/admin/module/DocumentsSharing/documents_sharing_groupe/edit' documents_sharing_groupe_id=$ID}">{$TITLE}</a>
+                </td>
+                <td>
+                    {loop name="group-customer-list" type="customer" current="false" id=$CUSTOMER_ID}
+                    <div class="share-customer">{$LASTNAME} {$FIRSTNAME}</div>
+                    {/loop}
+                </td>
+                {* Actions *}
+                <td>
+                    <div class="btn-group">
+                        {loop name="auth-edit-group" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="DocumentsSharing"}
+                        <a class="btn btn-default btn-xs" title="{intl l='Edit this DocumentsSharingGroupe' d='documentssharing.bo.default'}"  href="{url path='/admin/module/DocumentsSharing/documents_sharing_groupe/edit' documents_sharing_groupe_id=$ID}">
+                            <i class="glyphicon glyphicon-edit"></i>
+                        </a>
+                        {/loop}
+                        {loop name="auth-delete-group" type="auth" role="ADMIN" resource="admin.module" access="DELETE" module="DocumentsSharing"}
+                        <a class="btn btn-default btn-xs documents_sharing_groupe-delete" title="{intl l='Delete this DocumentsSharingGroupe' d='documentssharing.bo.default'}" data-target="#documents_sharing_groupe-delete" data-toggle="modal" data-id="{$ID}">
+                            <i class="glyphicon glyphicon-trash"></i>
+                        </a>
+                        {/loop}
+                    </div>
+                </td>
+            </tr>
+            {/loop}
+            {elseloop rel="documents-sharing-groupe-list"}
+            <tr>
+                <td colspan="1000">
+                    <div class="alert alert-info">
+                        {intl l="There is no DocumentsSharingGroupe" d="documentssharing.bo.default"}
+                    </div>
+                </td>
+            </tr>
+            {/elseloop}
+            </tbody>
+
+            {ifloop rel="documents-sharing-groupe-list"}
+            <tfoot>
+            <tr>
+                <td colspan="7">
+                    {include
+                    file           = "includes/pagination.html"
+
+                    loop_ref       = "documents-sharing-groupe-list"
+                    max_page_count = 20
+                    page_url       = "{url path="/admin/module/DocumentsSharing/documents_sharing_groupe" order=$order target='documents_sharing_groupe-table'}"
+                    }
+                </td>
+            </tr>
+            </tfoot>
+            {/ifloop}
+
+        </table>
+    </div>
+</div>

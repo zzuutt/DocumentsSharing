@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://symfony.com/schema/routing" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+  <!--
+
+    if a /admin/module/documentssharing/ route is provided, a "Configuration" button will be displayed
+    for the module in the module list. Clicking this button will invoke this route.
+
+    <route id="my_route_id" path="/admin/module/documentssharing">
+        <default key="_controller">DocumentsSharing\Full\Class\Name\Of\YourConfigurationController::methodName</default>
+    </route>
+
+    <route id="my_route_id" path="/admin/module/documentssharing/route-name">
+        <default key="_controller">DocumentsSharing\Full\Class\Name\Of\YourAdminController::methodName</default>
+    </route>
+
+    <route id="my_route_id" path="/my/route/name">
+        <default key="_controller">DocumentsSharing\Full\Class\Name\Of\YourOtherController::methodName</default>
+    </route>
+
+    ...add as many routes as required.
+
+    <route>
+    ...
+    </route>
+    -->
+  <route id="documentssharing.documents_sharing.list" path="/admin/module/DocumentsSharing/documents_sharing" methods="get">
+    <default key="_controller">DocumentsSharing:DocumentsSharing:default</default>
+  </route>
+  <route id="documentssharing.documents_sharing.create" path="/admin/module/DocumentsSharing/documents_sharing" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharing:create</default>
+  </route>
+  <route id="documentssharing.documents_sharing.view" path="/admin/module/DocumentsSharing/documents_sharing/edit" methods="get">
+    <default key="_controller">DocumentsSharing:DocumentsSharing:update</default>
+  </route>
+  <route id="documentssharing.documents_sharing.edit" path="/admin/module/DocumentsSharing/documents_sharing/edit" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharing:processUpdate</default>
+  </route>
+  <route id="documentssharing.documents_sharing.delete" path="/admin/module/DocumentsSharing/documents_sharing/delete" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharing:delete</default>
+  </route>
+  <route id="documentssharing.documents_sharing_document.list" path="/admin/module/DocumentsSharing/documents_sharing_document" methods="get">
+    <default key="_controller">DocumentsSharing:DocumentsSharingDocument:default</default>
+  </route>
+  <route id="documentssharing.documents_sharing_document.create" path="/admin/module/DocumentsSharing/documents_sharing_document" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharingDocument:create</default>
+  </route>
+  <route id="documentssharing.documents_sharing_document.view" path="/admin/module/DocumentsSharing/documents_sharing_document/edit" methods="get">
+    <default key="_controller">DocumentsSharing:DocumentsSharingDocument:update</default>
+  </route>
+  <route id="documentssharing.documents_sharing_document.edit" path="/admin/module/DocumentsSharing/documents_sharing_document/edit" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharingDocument:processUpdate</default>
+  </route>
+  <route id="documentssharing.documents_sharing_document.delete" path="/admin/module/DocumentsSharing/documents_sharing_document/delete" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharingDocument:delete</default>
+  </route>
+  <route id="documentssharing.documents_sharing_groupe.list" path="/admin/module/DocumentsSharing/documents_sharing_groupe" methods="get">
+    <default key="_controller">DocumentsSharing:DocumentsSharingGroupe:default</default>
+  </route>
+  <route id="documentssharing.documents_sharing_groupe.create" path="/admin/module/DocumentsSharing/documents_sharing_groupe" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharingGroupe:create</default>
+  </route>
+  <route id="documentssharing.documents_sharing_groupe.view" path="/admin/module/DocumentsSharing/documents_sharing_groupe/edit" methods="get">
+    <default key="_controller">DocumentsSharing:DocumentsSharingGroupe:update</default>
+  </route>
+  <route id="documentssharing.documents_sharing_groupe.edit" path="/admin/module/DocumentsSharing/documents_sharing_groupe/edit" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharingGroupe:processUpdate</default>
+  </route>
+  <route id="documentssharing.documents_sharing_groupe.delete" path="/admin/module/DocumentsSharing/documents_sharing_groupe/delete" methods="post">
+    <default key="_controller">DocumentsSharing:DocumentsSharingGroupe:delete</default>
+  </route>
+
+  <route id="documentssharing.file.multi.download" path="/documentssharing/{file_key}/download">
+    <default key="_controller">DocumentsSharing:DocumentsSharingDownloadMulti:downloadMulti</default>
+    <requirement key="file_key">.*</requirement>
+  </route>
+
+</routes>

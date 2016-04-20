@@ -1,0 +1,200 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='documentssharing.bo.default'}
+
+{block name="after-bootstrap-css"}
+{stylesheets file='assets/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css'}
+<link rel="stylesheet" href="{$asset_url}">
+{/stylesheets}
+<style>
+    .share-file:before {
+        font-family: "fontawesome";
+        content: "\f016";
+        padding: 0 5px;
+
+    }
+    .share-customer:before {
+        font-family: "fontawesome";
+        content: "\f007";
+        padding: 0 5px;
+    }
+    .share-group:before {
+        font-family: "fontawesome";
+        content: "\f0c0";
+        padding: 0 5px;
+    }
+    span[data-toggle=popover] {
+        color:#3399ff;
+    }
+</style>
+{/block}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='DocumentsSharing' d='documentssharing.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}DocumentsSharing{/block}
+
+{block name="main-content"}
+    <div id="wrapper" class="container">
+
+        {if $general_error}
+            <div class="alert alert-danger">
+                {$general_error}
+            </div>
+        {/if}
+
+        <!-- DocumentsSharing list -->
+        <div class="general-block-decorator">
+            <div class="title title-without-tabs">
+                {intl l="Documents Sharing" d="documentssharing.bo.default"}
+            </div>
+
+            <ul class="nav nav-tabs" id="tabbed-menu">
+                <li class="active"><a href="#sharing" data-toggle="tab">{intl l="Sharing" d='documentssharing.bo.default'}</a></li>
+                <li><a href="#documents" data-toggle="tab">{intl l="Documents" d='documentssharing.bo.default'}</a></li>
+                <li><a href="#groupes" data-toggle="tab">{intl l="Groups" d='documentssharing.bo.default'}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="sharing">
+                    {include file="form/form_sharings.html"}
+                </div>
+                <div class="tab-pane fade" id="documents">
+                    {include file="form/form_documents.html"}
+                </div>
+                <div class="tab-pane fade" id="groupes">
+                    {include file="form/form_groupes.html"}
+                </div>
+
+            </div>
+        </div>
+
+        {include file="modal/modal_share.html"}
+        {include file="modal/modal_document.html"}
+        {include file="modal/modal_groupe.html"}
+        {include file="modal/modal_filemanager.html"}
+
+    </div>
+
+{/block}
+
+{block name="javascript-initialization"}
+    {javascripts file='assets/js/moment-with-locales.min.js'}
+    <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js'}
+    <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    <script>
+        $('.datetime-picker').datetimepicker({
+            locale: '{lang attr="code"}'
+        });
+
+        $(function() {
+            $('#alertDeleteAfter, #alertDeleteAfter-info').hide();
+
+            $('a.documents_sharing-delete').click(function(ev) {
+                $('#documents_sharing_delete_id').val($(this).data('id'));
+            });
+            $('a.documents_sharing_document-delete').click(function(ev) {
+                $('#documents_sharing_document_delete_id').val($(this).data('id'));
+            });
+            $('a.documents_sharing_groupe-delete').click(function(ev) {
+                $('#documents_sharing_groupe_delete_id').val($(this).data('id'));
+            });
+            $('#documents_sharing_document_id').on('change',
+                    function(event){
+                        var message = checkInList($(this).val());
+                        if(message != '')
+                        {
+                            $('#documents_sharing_delete_file_after').prop('checked', true);
+                            $('#alertDeleteAfter').html("{intl l="Sharing already exists for this document(s) with the 'Delete file after' checked"}"+':<ul> '+ message + '</ul>');
+                            $('#alertDeleteAfter').show();
+                            $('#alertDeleteAfter-info').hide();
+                        }
+                        else {
+                            $('#documents_sharing_delete_file_after').prop('checked', false);
+                            $('#alertDeleteAfter').hide();
+                            $('#alertDeleteAfter-info').hide();
+                        }
+
+                    }
+            );
+
+            $('#documents_sharing_delete_file_after').on('change',
+                    function(e){
+                        if (!$('#documents_sharing_delete_file_after').is(':checked') && $('#alertDeleteAfter').is(":visible")) {
+                            $('#alertDeleteAfter-info').show();
+                        }
+                        if ($('#documents_sharing_delete_file_after').is(':checked')){
+                            $('#alertDeleteAfter-info').hide();
+                        }
+                    }
+            );
+
+            $('[data-toggle="popover"]').popover();
+
+            $('#documents_sharing_filemanager').on('show.bs.modal',
+                    function(e){
+                        console.log('open');
+                        $('#documents_sharing_document-create').modal('hide');
+                    }
+            )
+
+            $('#documents_sharing_filemanager').on('hidden.bs.modal',
+                function(e){
+                    console.log('Ferme');
+                    $('#documents_sharing_document-create').modal('show');
+                }
+            )
+
+            // Show proper tab, if defined
+            {if ! empty($smarty.get.current_tab)}
+                $('.nav-tabs a[href="#{$smarty.get.current_tab}"]').trigger("click");
+            {/if}
+        });
+
+        function responsive_filemanager_callback(field_id){
+            console.log(field_id);
+            var url=jQuery('#'+field_id).val().replace(/^h(.*?)(upload)\//, '');
+            //alert('update '+field_id+" with "+url);
+            $('#documents_sharing_document_file').val(url);
+        }
+
+        function checkInList(value){
+            //var search_value = value;
+            var documents_id = [];
+            var document_name = [];
+            {$i = 0}
+            {loop type='documents-sharing' name='list_document_deleteafter' delete_file_after=true}
+            var temp = '{$DOCUMENT_ID}';
+            pushArray(documents_id, temp.split(','));
+                {loop type="documents-sharing-document" name="share-document-list" id=$DOCUMENT_ID}
+            document_name[{$i}] = '{$TITLE}';
+            {$i = $i +1}
+                {/loop}
+            {/loop}
+
+            //var document_selected = search_value.split(',');
+            var message = '';
+            $.each(value, function(index, docvalue){
+                var etat = $.inArray(docvalue, documents_id);
+                if(etat >= 0){
+                    message = message + '<li>' + document_name[etat] + '</li>';
+                };
+            })
+
+
+            return message;
+        }
+
+        function pushArray(arr, arr2){
+            arr.push.apply(arr, arr2);
+        }
+    </script>
+{/block}

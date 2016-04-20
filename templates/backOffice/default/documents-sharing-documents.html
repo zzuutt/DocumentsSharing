@@ -1,0 +1,184 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='documentssharing.bo.default'}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='DocumentsSharingDocument' d='documentssharing.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}DocumentsSharing{/block}
+
+{block name="main-content"}
+    <div id="wrapper" class="container">
+
+        {if $general_error}
+            <div class="alert alert-danger">
+                {$general_error}
+            </div>
+        {/if}
+
+        <!-- DocumentsSharingDocument list -->
+        <div class="general-block-decorator">
+            <div class="table-responsive">
+                <table class="table table-striped table-condensed" id="documents_sharing_document-table">
+                    <caption class="clearfix">
+                        {intl l="Documents sharing document"}
+
+                        {loop name="auth-create" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="DocumentsSharing"}
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-primary" title="{intl l='Create a new DocumentsSharingDocument entry' d='documentssharing.bo.default'}" data-target="#documents_sharing_document-create" data-toggle="modal">
+                                    <i class="glyphicon glyphicon-plus-sign"></i>
+                                </a>
+                                <a class="btn btn-default btn-primary" href="{url path="/admin/module/DocumentsSharing/documents_sharing" current_tab="documents"}">
+                                {intl l="Close"}
+                                </a>
+                            </div>
+                        {/loop}
+                    </caption>
+
+                    <thead>
+                    <tr>
+                        <th>
+                            {admin_sortable_header
+                                current_order=$order
+                                order='id'
+                                reverse_order='id-reverse'
+                                path={url path='/admin/module/DocumentsSharing/documents_sharing_document' target='documents_sharing_document-table'}
+                                label="{intl l='Id' d='documentssharing.bo.default'}"
+                            }
+                        </th>
+                        <th>
+                            {admin_sortable_header
+                            current_order=$order
+                            order='title'
+                            reverse_order='title-reverse'
+                            path={url path='/admin/module/DocumentsSharing/documents_sharing_document' target='documents_sharing_document-table'}
+                            label="{intl l='Title' d='documentssharing.bo.default'}"
+                            }
+                        </th>
+                        <th>
+                            {admin_sortable_header
+                                current_order=$order
+                                order='file'
+                                reverse_order='file-reverse'
+                                path={url path='/admin/module/DocumentsSharing/documents_sharing_document' target='documents_sharing_document-table'}
+                                label="{intl l='File' d='documentssharing.bo.default'}"
+                            }
+                        </th>
+
+                        <th>
+                            {intl l="Actions"}
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {loop name="documents-sharing-document-list" type="documents-sharing-document" order=$order}
+                        <tr>
+                            <td>
+                                <a href="{url path='/admin/module/DocumentsSharing/documents_sharing_document/edit' documents_sharing_document_id=$ID}">{$ID}</a>
+                            </td>
+                            <td>
+                                <a href="{url path='/admin/module/DocumentsSharing/documents_sharing_document/edit' documents_sharing_document_id=$ID}">{$TITLE}</a>
+                            </td>
+                            <td>
+                                {{$FILE|regex_replace:"/^(.*?)upload\//":""}|urldecode}
+                            </td>
+                            {* Actions *}
+                            <td>
+                                <div class="btn-group">
+                                    {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="DocumentsSharing"}
+                                        <a class="btn btn-default btn-xs" title="{intl l='Edit this DocumentsSharingDocument' d='documentssharing.bo.default'}"  href="{url path='/admin/module/DocumentsSharing/documents_sharing_document/edit' documents_sharing_document_id=$ID}">
+                                            <i class="glyphicon glyphicon-edit"></i>
+                                        </a>
+                                    {/loop}
+                                    {loop name="auth-delete" type="auth" role="ADMIN" resource="admin.module" access="DELETE" module="DocumentsSharing"}
+                                        <a class="btn btn-default btn-xs documents_sharing_document-delete" title="{intl l='Delete this DocumentsSharingDocument' d='documentssharing.bo.default'}" data-target="#documents_sharing_document-delete" data-toggle="modal" data-id="{$ID}">
+                                            <i class="glyphicon glyphicon-trash"></i>
+                                        </a>
+                                    {/loop}
+                                </div>
+                            </td>
+                        </tr>
+                    {/loop}
+                    {elseloop rel="documents-sharing-document-list"}
+                        <tr>
+                            <td colspan="1000">
+                                <div class="alert alert-info">
+                                    {intl l="There is no DocumentsSharingDocument" d="documentssharing.bo.default"}
+                                </div>
+                            </td>
+                        </tr>
+                    {/elseloop}
+                    </tbody>
+
+                    {ifloop rel="documents-sharing-document-list"}
+                    <tfoot>
+                        <tr>
+                            <td colspan="7">
+                                {include
+                                file           = "includes/pagination.html"
+
+                                loop_ref       = "documents-sharing-document-list"
+                                max_page_count = 20
+                                page_url       = "{url path="/admin/module/DocumentsSharing/documents_sharing_document" order=$order target='documents_sharing_document-table'}"
+                                }
+                            </td>
+                        </tr>
+                    </tfoot>
+                    {/ifloop}
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+{include file="modal/modal_document.html"}
+
+{include file="modal/modal_filemanager.html"}
+{/block}
+
+{block name="javascript-initialization"}
+    <script>
+        $(function() {
+            $('a.documents_sharing_document-delete').click(function(ev) {
+                $('#documents_sharing_document_delete_id').val($(this).data('id'));
+            });
+
+            $(document).on('show.bs.modal', '.modal', function (event) {
+                var zIndex = 1040 + (10 * $('.modal:visible').length);
+                $(this).css('z-index', zIndex);
+                setTimeout(function() {
+                    $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+                }, 0);
+            });
+
+            $('#documents_sharing_filemanager').on('show.bs.modal',
+                    function(e){
+                        console.log('open');
+                        $('#documents_sharing_document-create').modal('hide');
+                    }
+            )
+
+            $('#documents_sharing_filemanager').on('hidden.bs.modal',
+                    function(e){
+                        console.log('Ferme');
+                        $('#documents_sharing_document-create').modal('show');
+                    }
+            )
+
+        });
+
+        function responsive_filemanager_callback(field_id){
+            console.log(field_id);
+            var url=jQuery('#'+field_id).val().replace(/^h(.*?)(upload)\//, '');
+            //alert('update '+field_id+" with "+url);
+            $('#documents_sharing_document_file').val(url);
+            //$('#documents_sharing_document-create').modal('hide');
+            //your code
+        }
+    </script>
+{/block}

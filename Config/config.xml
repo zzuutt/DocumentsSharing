@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://thelia.net/schema/dic/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+  <loops>
+    <!-- sample definition
+        <loop name="MySuperLoop" class="DocumentsSharing\Loop\MySuperLoop" />
+        -->
+    <loop name="documents-sharing" class="DocumentsSharing\Loop\DocumentsSharing"/>
+    <loop name="documents-sharing-document" class="DocumentsSharing\Loop\DocumentsSharingDocument"/>
+    <loop name="documents-sharing-groupe" class="DocumentsSharing\Loop\DocumentsSharingGroupe"/>
+  </loops>
+  <forms>
+    <!--
+        <form name="MyFormName" class="DocumentsSharing\Form\MySuperForm" />
+        -->
+    <form name="documents_sharing.create" class="DocumentsSharing\Form\DocumentsSharingCreateForm"/>
+    <form name="documents_sharing.update" class="DocumentsSharing\Form\DocumentsSharingUpdateForm"/>
+    <form name="documents_sharing_document.create" class="DocumentsSharing\Form\DocumentsSharingDocumentCreateForm"/>
+    <form name="documents_sharing_document.update" class="DocumentsSharing\Form\DocumentsSharingDocumentUpdateForm"/>
+    <form name="documents_sharing_groupe.create" class="DocumentsSharing\Form\DocumentsSharingGroupeCreateForm"/>
+    <form name="documents_sharing_groupe.update" class="DocumentsSharing\Form\DocumentsSharingGroupeUpdateForm"/>
+  </forms>
+  <commands>
+    <!--
+        <command class="DocumentsSharing\Command\MySuperCommand" />
+        -->
+  </commands>
+  <!--
+    <services>
+
+    </services>
+    -->
+  <hooks>
+    <hook id="documentssharing.hook" class="DocumentsSharing\Hook\Back\DocumentsSharingHook" scope="request">
+      <!-- For DocumentsSharing insertion in Tools menu -->
+      <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools"/>
+    </hook>
+
+    <hook id="documentssharing.account.hook.front" class="DocumentsSharing\Hook\Front\DocumentsSharingAccountDisplayHook" scope="request">
+      <tag name="hook.event_listener" event="account.additional" type="front" method="onAccountAdditional"/>
+      <tag name="hook.event_listener" event="account.stylesheet" type="front" method="onAccountCssInclude"/>
+      <tag name="hook.event_listener" event="account.after-javascript-include" type="front" method="onAccountJsInclude"/>
+    </hook>
+
+  </hooks>
+  <!--
+    <exports>
+
+    </exports>
+    -->
+  <!--
+    <imports>
+
+    </imports>
+    -->
+  <services>
+    <service id="action.documentssharing.documents_sharing_table" class="DocumentsSharing\Action\DocumentsSharingAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="documentssharing.form.type.documents_sharing_id" class="DocumentsSharing\Form\Type\DocumentsSharingIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+    <service id="action.documentssharing.documents_sharing_document_table" class="DocumentsSharing\Action\DocumentsSharingDocumentAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="documentssharing.form.type.documents_sharing_document_id" class="DocumentsSharing\Form\Type\DocumentsSharingDocumentIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+    <service id="action.documentssharing.documents_sharing_groupe_table" class="DocumentsSharing\Action\DocumentsSharingGroupeAction">
+      <tag name="kernel.event_subscriber"/>
+    </service>
+    <service id="documentssharing.form.type.documents_sharing_groupe_id" class="DocumentsSharing\Form\Type\DocumentsSharingGroupeIdType">
+      <argument id="thelia.translator" type="service"/>
+      <tag name="thelia.form.type"/>
+    </service>
+  </services>
+</config>

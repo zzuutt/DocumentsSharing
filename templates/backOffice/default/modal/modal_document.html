@@ -1,0 +1,74 @@
+{* CREATE Modal *}
+
+{form name="documents_sharing_document.create"}
+{capture "documents_sharing_document_create"}
+{form_hidden_fields form=$form}
+
+{form_field form=$form field="locale"}
+<input type="hidden" name="{$name}" value="{$edit_language_locale}" />
+{/form_field}
+
+{render_form_field form=$form field="success_url" value={url path='/admin/module/DocumentsSharing/documents_sharing_document/edit?documents_sharing_document_id=_ID_'}}
+
+{form_field form=$form field="file"}
+<div class="form-group">
+    <label class="control-label" for="{$label_attr.for}">
+        {$label}
+        {if $required}<span class="required">*</span>{/if}
+    </label>
+
+    {form_error form=$form field="file"}{$message}{/form_error}
+    {$fieldfileNameId = $label_attr.for}
+    <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$FILE}" readonly placeholder="{intl l='placeholder file' d='documentssharing.bo.default'}" />
+    <a data-toggle="modal"  data-target="#documents_sharing_filemanager" class="btn btn-primary" type="button">{intl l="Select" d="documentssharing.bo.default"}</a>
+</div>
+{/form_field}
+{custom_render_form_field field="title"}
+{loop type="lang" name="default-lang" default_only="1"}
+{* Switch edition to the current locale *}
+<input type="hidden" name="edit_language_id" value="{$ID}" />
+
+{render_form_field field="locale" value=$LOCALE}
+
+<div class="input-group">
+    <input type="text" {form_field_attributes field="title"}>
+    <span class="input-group-addon"><img src="{image file="assets/img/flags/{$CODE}.png"}" alt="{$TITLE}" /></span>
+</div>
+{/loop}
+{/custom_render_form_field}
+{/capture}
+
+{include file="includes/generic-create-dialog.html"
+
+
+dialog_id       = "documents_sharing_document-create"
+dialog_title    = {intl l="Create an entry of DocumentsSharingDocument" d="documentssharing.bo.default"}
+dialog_body     = {$smarty.capture.documents_sharing_document_create nofilter}
+
+dialog_ok_label     = {intl l="Create"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action        = {url path='/admin/module/DocumentsSharing/documents_sharing_document'}
+form_enctype       = {form_enctype form=$form}
+}
+{/form}
+
+
+{* DELETE modal *}
+
+{capture "documents_sharing_document_delete"}
+{intl l="Do you really want to delete this DocumentsSharingDocument entry ?" d="documentssharing.bo.default"}
+<input type="hidden" name="documents_sharing_document_id" id="documents_sharing_document_delete_id" value="" />
+{/capture}
+
+{include file="includes/generic-confirm-dialog.html"
+
+dialog_id       = "documents_sharing_document-delete"
+dialog_title    = {intl l="Delete an entry of DocumentsSharingDocument" d="documentssharing.bo.default"}
+dialog_message  = {$smarty.capture.documents_sharing_document_delete nofilter}
+
+dialog_ok_label     = {intl l="Delete"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action         = {token_url path='/admin/module/DocumentsSharing/documents_sharing_document/delete'}
+}

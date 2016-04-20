@@ -1,0 +1,49 @@
+{* CREATE Modal *}
+
+{form name="documents_sharing_groupe.create"}
+{capture "documents_sharing_groupe_create"}
+{form_hidden_fields form=$form}
+
+
+{render_form_field form=$form field="success_url" value={url path='/admin/module/DocumentsSharing/documents_sharing' current_tab="groupes"}}
+
+{render_form_field form=$form field="title"}
+
+{render_form_field form=$form field='customer_id'}
+{/capture}
+
+{include file="includes/generic-create-dialog.html"
+
+
+dialog_id       = "documents_sharing_groupe-create"
+dialog_title    = {intl l="Create an entry of DocumentsSharingGroupe" d="documentssharing.bo.default"}
+dialog_body     = {$smarty.capture.documents_sharing_groupe_create nofilter}
+
+dialog_ok_label     = {intl l="Create"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action        = {url path='/admin/module/DocumentsSharing/documents_sharing_groupe'}
+form_enctype       = {form_enctype form=$form}
+}
+{/form}
+
+
+{* DELETE modal *}
+
+{capture "documents_sharing_groupe_delete"}
+<p>{intl l="Do you really want to delete this DocumentsSharingGroupe entry ?" d="documentssharing.bo.default"}</p>
+<div class="alert alert-danger">{intl l="Attention all shares linked to that group will be deleted" d="documentssharing.bo.default"}</div>
+<input type="hidden" name="documents_sharing_groupe_id" id="documents_sharing_groupe_delete_id" value="" />
+{/capture}
+
+{include file="includes/generic-confirm-dialog.html"
+
+dialog_id       = "documents_sharing_groupe-delete"
+dialog_title    = {intl l="Delete an entry of DocumentsSharingGroupe" d="documentssharing.bo.default"}
+dialog_message  = {$smarty.capture.documents_sharing_groupe_delete nofilter}
+
+dialog_ok_label     = {intl l="Delete"}
+dialog_cancel_label = {intl l="Cancel"}
+
+form_action         = {token_url path='/admin/module/DocumentsSharing/documents_sharing_groupe/delete'}
+}

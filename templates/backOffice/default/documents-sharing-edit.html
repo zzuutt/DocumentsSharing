@@ -1,0 +1,256 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='documentssharing.bo.default'}
+
+{block name="after-bootstrap-css"}
+{stylesheets file='assets/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css'}
+<link rel="stylesheet" href="{$asset_url}">
+{/stylesheets}
+{/block}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='DocumentsSharing' d='documentssharing.bo.default'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}update{/block}
+{block name="check-module"}DocumentsSharing{/block}
+
+{block name="main-content"}
+
+    {form name="documents_sharing.update"}
+        <div id="wrapper" class="container">
+
+            {if $form_error}
+                <div class="alert alert-danger">{$form_error_message}</div>
+            {/if}
+
+            <div class="row">
+                <div class="col-md-12 general-block-decorator clearfix">
+                    <div class="title title-without-tabs">
+                        {intl l="DocumentsSharing edit" d="documentssharing.bo.default"}
+                    </div>
+
+                    <div class="form-container">
+                        <form method="POST" action="{$current_url}" {form_enctype form=$form} class="clearfix">
+
+                            {include "includes/inner-form-toolbar.html" close_url = {url path="/admin/module/DocumentsSharing/documents_sharing" current_tab="sharing"}}
+
+                            {form_field form=$form field="id"}
+                            {assign "documents_sharing_id" $value}
+                            <input type="hidden" name="{$name}" value="{$value}"/>
+                            {/form_field}
+                            {form_field form=$form field="locale"}
+                            <input type="hidden" name="{$name}" value="{$edit_language_locale}"/>
+                            {/form_field}
+                            {form_field form=$form field="success_url"}
+                            <input type="hidden" name="{$name}"
+                                   value="{url path='/admin/module/DocumentsSharing'}/documents_sharing"/>
+                            {/form_field}
+                            {form_hidden_fields form=$form}
+
+                            {loop name="documents_sharing_update" type="documents-sharing" backend_context="yes" id=$documents_sharing_id lang=$edit_language_id}
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        {form_field form=$form field="title"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="title"}{$message}{/form_error}
+
+                                            <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$TITLE}" placeholder="{intl l='placeholder title'}" />
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {render_form_field field="share_key" value=$SHARE_KEY}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {form_field form=$form field="document_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="document_id"}{$message}{/form_error}
+                                            <span class="label-help-block">{intl l="Use Ctrl+click to select (or deselect) more that one item"}</span>
+                                            <select class="form-control" name="{$name}" multiple id="{$label_attr.for}">
+                                                {assign var="list_document" value=","|explode:$DOCUMENT_ID}
+                                                {loop type='documents-sharing-document' name='document-all-list' lang=$edit_language_id}
+                                                <option value="{$ID}" {if {$ID|in_array:$list_document}}selected{/if}>{$TITLE}</option>
+                                                {/loop}
+                                            </select>
+                                            <!--input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$DOCUMENT_ID}" placeholder="{intl l='The DocumentsSharing document_id'}" /-->
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {form_field form=$form field="customer_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="customer_id"}{$message}{/form_error}
+                                            <select class="form-control" name="{$name}" id="{$label_attr.for}">
+                                                <option value="">{intl l="No Customer" d="documentssharing.bo.default"}</option>
+                                                {loop type='customer' name='customer-all-list' current=false}
+                                                <option value="{$ID}" {if $ID==$CUSTOMER_ID}selected{/if}>{$FIRSTNAME} {$LASTNAME}</option>
+                                                {/loop}
+                                            </select>
+                                            <!--input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$CUSTOMER_ID}" placeholder="{intl l='The DocumentsSharing customer_id'}" /-->
+                                        </div>
+                                        {/form_field}
+                                        {form_field form=$form field="groupe_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="groupe_id"}{$message}{/form_error}
+                                            <select class="form-control" name="{$name}" id="{$label_attr.for}">
+                                                <option value="">{intl l="No Group" d="documentssharing.bo.default"}</option>
+                                                {loop type='documents-sharing-groupe' name='groupe-all-list' current=false}
+                                                <option value="{$ID}" {if $ID==$GROUPE_ID}selected{/if}>{$TITLE}</option>
+                                                {/loop}
+                                            </select>
+                                            <!--input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$GROUPE_ID}" placeholder="{intl l='The DocumentsSharing groupe_id'}" /-->
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {form_field form=$form field="date_end_share"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="date_end_share"}{$message}{/form_error}
+
+                                            <div class='input-group date do-picker-datetime'>
+                                                <input type="{$type}" class="form-control datetime-picker"
+                                                       data-date-format="{$label_attr.moment_js_date_format}"
+                                                       {if
+                                                       $DATE_END_SHARE}value="{format_date date=$DATE_END_SHARE format=$label_attr.php_datetime_format}"
+                                                       {/if}
+                                                name="{$name}" id="{$label_attr.for}" placeholder="{intl
+                                                l={$label_attr.php_datetime_format} d='documentssharing.bo.default'}" />
+                                        <span class="input-group-addon"><span
+                                                class="glyphicon glyphicon-calendar"></span></span>
+                                            </div>
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {render_form_field field="delete_file_after" value=$DELETE_FILE_AFTER}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {form_field form=$form field="chapo"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="chapo"}{$message}{/form_error}
+
+                                            <textarea class="form-control" name="{$name}" rows="3" id="{$label_attr.for}" placeholder="{intl l='Short description text'}"/>{$CHAPO}</textarea>
+                                            <span class="help-block">{$label_attr.help}</span>
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {form_field form=$form field="description"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="description"}{$message}{/form_error}
+
+                                            <textarea class="form-control wysiwyg" name="{$name}" rows="10" id="{$label_attr.for}" />{$DESCRIPTION}</textarea>
+                                            <span class="help-block">{$label_attr.help}</span>
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {form_field form=$form field="postscriptum"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="postscriptum"}{$message}{/form_error}
+
+                                            <textarea class="form-control" name="{$name}" rows="3" id="{$label_attr.for}" placeholder="{intl l='Short additional text'}"/>{$POSTSCRIPTUM}</textarea>
+                                            <span class="help-block">{$label_attr.help}</span>
+                                        </div>
+                                        {/form_field}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {include "includes/inner-form-toolbar.html" hide_flags=true close_url={url path="/admin/module/DocumentsSharing/documents_sharing"}}
+
+                                        <small>
+                                            {intl
+                                            l="DocumentsSharing created on %created_at. Last modification: %updated_at"
+                                            created_at={format_date date=$CREATE_DATE}
+                                            updated_at={format_date date=$UPDATE_DATE}
+                                            d="documentssharing.bo.default"
+                                            }
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            {/loop}
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    {/form}
+{/block}
+
+{block name="javascript-initialization"}
+    {javascripts file='assets/js/moment-with-locales.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file='assets/js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js'}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    <script>
+        $('.datetime-picker').datetimepicker({
+            locale: '{lang attr="code"}'
+        });
+    </script>
+{/block}
+
+{block name="javascript-last-call"}
+{hook name="wysiwyg.js" location="wysiwyg-image-edit-js" }
+{/block}

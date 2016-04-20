@@ -1,0 +1,80 @@
+<div id="documents-sharing-{$customer_id}">
+    <div class="panel-group" role="tablist">
+        {loop type="documents-sharing" name="documents_sharing" customer_id="{$customer_id}"}
+        {if $DAYS_REMAINING >=0 }
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="collapseListGroupHeading{$ID}">
+                {if $CHAPO}
+                <div class="pull-right">
+                    <a class="btn btn-lg" style="color:black;" data-placement="left" data-toggle="popover" data-content="{$CHAPO}"><span class="glyphicon glyphicon-info-sign"></span></a>
+                </div>
+                {/if}
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" href="#collapseListGroup{$ID}" class="collapsed" aria-expanded="false" aria-controls="collapseListGroup{$ID}">
+                        <span class="glyphicon glyphicon-inbox"></span> {$TITLE}
+                    </a>
+                </h4>
+            </div>
+            <div aria-labelledby="collapseListGroupHeading{$ID}" role="tabpanel" class="panel-collapse collapse" id="collapseListGroup{$ID}" aria-expanded="false" style="">
+                <div class="panel-body">
+                    {if $DESCRIPTION || $POSTSCRIPTUM}
+                    <div class="row">
+                        <div class="col-md-12 general-block-decorator clearfix">
+                            <blockquote>
+                                {if $DESCRIPTION}{$DESCRIPTION nofilter}{/if}
+                                {if $POSTSCRIPTUM}<footer>{$POSTSCRIPTUM}</footer>{/if}
+                            </blockquote>
+                        </div>
+                    </div>
+                    {/if}
+                    <div class="row">
+                        <div class="col-md-12 general-block-decorator clearfix">
+                            <div class="container-fluid">
+                                {loop type="documents-sharing-document" name="documents_sharing_document" id=$DOCUMENT_ID}
+                                <div class="row files">
+                                    <div class="col-md-8">
+                                        <h5>{$TITLE}</h5>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <span class="label
+                                        {if $DAYS_REMAINING ==0}label-danger{/if}
+                                        {if $DAYS_REMAINING >= 1 && $DAYS_REMAINING < 3}label-warning{/if}
+                                        {if $DAYS_REMAINING >= 3}label-success{/if}
+                                        ">
+                                            {if $DAYS_REMAINING == 0 }{intl l="last day" d="documentssharing.fo.default"}{/if}
+                                            {if $DAYS_REMAINING == 1 }{intl l="1 day remaining" d="documentssharing.fo.default"}{/if}
+                                            {if $DAYS_REMAINING > 1 }{intl l="%days_remaining days remaining" days_remaining={$DAYS_REMAINING} d="documentssharing.fo.default"}{/if}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a class="btn btn-default pull-right" href="{url path='/documentssharing/%fileKey/download' fileKey=$FILE_KEY} ">
+                                            <i class="glyphicon glyphicon-download-alt"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12">
+                                        {if $CHAPO}<p>{$CHAPO}</p>{/if}
+                                        {if $DESCRIPTION}<p>{$DESCRIPTION nofilter}</p>{/if}
+                                        {if $POSTSCRIPTUM}<p>{$POSTSCRIPTUM}</p>{/if}
+                                    </div>
+                                </div>
+                                {/loop}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        {/loop}
+        {elseloop rel="documents_sharing"}
+        <div class="panel panel-default">
+            <div class="alert alert-info">
+                {intl l="There is no file sharing" d="documentssharing.fo.default"}
+            </div>
+        </div>
+        {/elseloop}
+    </div>
+</div>
+
+<div style="height: 20px;">&nbsp;</div>
+
