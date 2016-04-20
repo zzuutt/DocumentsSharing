@@ -2,6 +2,7 @@
 for Thelia >= 2.2.0
 
 This module allows to share documents with a customer or/and customer group.
+
 You can set a download limit date and if the file should be deleted at the end.
 
 ## Installation
