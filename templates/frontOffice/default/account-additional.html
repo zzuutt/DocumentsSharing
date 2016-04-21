@@ -6,7 +6,7 @@
             <div class="panel-heading" role="tab" id="collapseListGroupHeading{$ID}">
                 {if $CHAPO}
                 <div class="pull-right">
-                    <a class="btn btn-lg" style="color:black;" data-placement="left" data-toggle="popover" data-content="{$CHAPO}"><span class="glyphicon glyphicon-info-sign"></span></a>
+                    <a class="btn btn-lg" style="color:black;" data-placement="left" data-toggle="popover" data-html="true" data-content="<span class='summary-share'>{$CHAPO}</span>"><span class="glyphicon glyphicon-info-sign"></span></a>
                 </div>
                 {/if}
                 <h4 class="panel-title">
@@ -30,11 +30,12 @@
                     <div class="row">
                         <div class="col-md-12 general-block-decorator clearfix">
                             <div class="container-fluid">
-                                {loop type="documents-sharing-document" name="documents_sharing_document" id=$DOCUMENT_ID}
+                                {loop type="documents-sharing-document" name="documents_sharing_document" id=$DOCUMENT_ID order='title'}
                                 <div class="row files">
                                     <div class="col-md-8">
-                                        <h5>{$TITLE}</h5>
+                                        <h5 class="title-file-download">{$TITLE}</h5>
                                     </div>
+                                    <div class="col-md-1 text-center">{$FILE_SIZE|filesize}</div>
                                     <div class="col-md-2 text-center">
                                         <span class="label
                                         {if $DAYS_REMAINING ==0}label-danger{/if}
@@ -46,16 +47,20 @@
                                             {if $DAYS_REMAINING > 1 }{intl l="%days_remaining days remaining" days_remaining={$DAYS_REMAINING} d="documentssharing.fo.default"}{/if}
                                         </span>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div class="col-md-1">
                                         <a class="btn btn-default pull-right" href="{url path='/documentssharing/%fileKey/download' fileKey=$FILE_KEY} ">
                                             <i class="glyphicon glyphicon-download-alt"></i>
                                         </a>
                                     </div>
+                                    {if $CHAPO || $DESCRIPTION || $POSTSCRIPTUM}
                                     <div class="col-md-12">
-                                        {if $CHAPO}<p>{$CHAPO}</p>{/if}
+                                        <blockquote class="information-file-download">
+                                        {if $CHAPO}<i>{$CHAPO}</i>{/if}
                                         {if $DESCRIPTION}<p>{$DESCRIPTION nofilter}</p>{/if}
-                                        {if $POSTSCRIPTUM}<p>{$POSTSCRIPTUM}</p>{/if}
+                                        {if $POSTSCRIPTUM}<footer>{$POSTSCRIPTUM}</footer>{/if}
+                                        </blockquote>
                                     </div>
+                                    {/if}
                                 </div>
                                 {/loop}
                             </div>
@@ -75,6 +80,4 @@
         {/elseloop}
     </div>
 </div>
-
 <div style="height: 20px;">&nbsp;</div>
-

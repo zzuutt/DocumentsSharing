@@ -32,14 +32,20 @@ class DocumentsSharingDocument extends BaseI18nLoop implements PropelSearchLoopI
      */
     public function parseResults(LoopResult $loopResult)
     {
+        $folder = THELIA_WEB_DIR.'media'.DS.'documentssharing'.DS.'upload';
+
         /** @var \DocumentsSharing\Model\DocumentsSharingDocument $entry */
         foreach ($loopResult->getResultDataCollection() as $entry) {
             $row = new LoopResultRow($entry);
+
+            $dwnfile = urldecode(preg_replace("/^h(.*?)(upload)\//", '',$entry->getFile()));
+            $filename = str_replace('/',DS,$dwnfile);
 
             $row
                 ->set("ID", $entry->getId())
                 ->set("FILE", $entry->getFile())
                 ->set("FILE_KEY", $entry->getFileKey())
+                ->set("FILE_SIZE", filesize($folder.DS.$filename))
                 ->set("TITLE", $entry->getVirtualColumn("i18n_TITLE"))
                 ->set("DESCRIPTION", $entry->getVirtualColumn("i18n_DESCRIPTION"))
                 ->set("CHAPO", $entry->getVirtualColumn("i18n_CHAPO"))

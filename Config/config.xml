@@ -74,5 +74,11 @@
       <argument id="thelia.translator" type="service"/>
       <tag name="thelia.form.type"/>
     </service>
+
+    <service id="documentssharing.smarty.plugin" class="DocumentsSharing\Smarty\Plugins\Filesize" scope="request">
+      <argument type="service" id="request"/>
+      <tag name="thelia.parser.register_plugin"/>
+    </service>
+
   </services>
 </config>

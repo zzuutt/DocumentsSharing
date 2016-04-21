@@ -6,6 +6,14 @@
 <link rel="stylesheet" href="{$asset_url}">
 {/stylesheets}
 <style>
+    @font-face{
+        font-family:FontAwesome;src:url(../../../fonts/fontawesome/fontawesome-webfont.eot?v=3);
+        src:url(../../../fonts/fontawesome/fontawesome-webfont.eot?#iefix&v=3) format('embedded-opentype'),
+        url(../../../fonts/fontawesome/fontawesome-webfont.woff?v=3) format('woff'),
+        url(../../../fonts/fontawesome/fontawesome-webfont.ttf?v=3) format('truetype'),
+        url(../../../fonts/fontawesome/fontawesome-webfont.svg?v=3#fontawesomeregular) format('svg');
+        font-weight:400;font-style:normal
+    }
     .share-file:before {
         font-family: "fontawesome";
         content: "\f016";
@@ -113,7 +121,7 @@
                         if(message != '')
                         {
                             $('#documents_sharing_delete_file_after').prop('checked', true);
-                            $('#alertDeleteAfter').html("{intl l="Sharing already exists for this document(s) with the 'Delete file after' checked"}"+':<ul> '+ message + '</ul>');
+                            $('#alertDeleteAfter').html("{intl l="Sharing already exists for this document(s) with the 'Delete file after' checked" d="documentssharing.bo.default"}"+':<ul> '+ message + '</ul>');
                             $('#alertDeleteAfter').show();
                             $('#alertDeleteAfter-info').hide();
                         }

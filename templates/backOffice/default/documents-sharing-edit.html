@@ -84,7 +84,7 @@
                                             <span class="label-help-block">{intl l="Use Ctrl+click to select (or deselect) more that one item"}</span>
                                             <select class="form-control" name="{$name}" multiple id="{$label_attr.for}">
                                                 {assign var="list_document" value=","|explode:$DOCUMENT_ID}
-                                                {loop type='documents-sharing-document' name='document-all-list' lang=$edit_language_id}
+                                                {loop type='documents-sharing-document' name='document-all-list' order='title' lang=$edit_language_id}
                                                 <option value="{$ID}" {if {$ID|in_array:$list_document}}selected{/if}>{$TITLE}</option>
                                                 {/loop}
                                             </select>
@@ -120,7 +120,7 @@
                                             {form_error form=$form field="groupe_id"}{$message}{/form_error}
                                             <select class="form-control" name="{$name}" id="{$label_attr.for}">
                                                 <option value="">{intl l="No Group" d="documentssharing.bo.default"}</option>
-                                                {loop type='documents-sharing-groupe' name='groupe-all-list' current=false}
+                                                {loop type='documents-sharing-groupe' name='groupe-all-list' current=false order='title'}
                                                 <option value="{$ID}" {if $ID==$GROUPE_ID}selected{/if}>{$TITLE}</option>
                                                 {/loop}
                                             </select>

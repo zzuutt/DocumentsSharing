@@ -79,6 +79,7 @@ The module provides a new loop : **documents-sharing**, **documents-sharing-docu
 |$ID                | the share id |
 |$FILE              | the file |
 |$FILE_KEY          | the file key |
+|$FILE_SIZE         | the filsize in bytes|
 |$TITLE             | the title |
 |$DESCRIPTION       |  |
 |$CHAPO             |  |

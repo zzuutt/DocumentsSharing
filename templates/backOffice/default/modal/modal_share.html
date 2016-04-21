@@ -1,145 +1,289 @@
 {* CREATE Modal *}
 
+
+
 {form name="documents_sharing.create"}
+
 {capture "documents_sharing_create"}
+
 {form_hidden_fields form=$form}
 
+
+
 {form_field form=$form field="locale"}
+
 <input type="hidden" name="{$name}" value="{$edit_language_locale}" />
+
 {/form_field}
+
+
 
 {render_form_field form=$form field="success_url" value={url path='/admin/module/DocumentsSharing/documents_sharing/edit?documents_sharing_id=_ID_'}}
 
+
+
 {custom_render_form_field field="title"}
+
 {loop type="lang" name="default-lang" default_only="1"}
+
 {* Switch edition to the current locale *}
+
 <input type="hidden" name="edit_language_id" value="{$ID}" />
+
+
 
 {render_form_field field="locale" value=$LOCALE}
 
+
+
 <div class="input-group">
+
     <input type="text" {form_field_attributes field="title"}>
+
     <span class="input-group-addon"><img src="{image file="assets/img/flags/{$CODE}.png"}" alt="{$TITLE}" /></span>
+
 </div>
+
 {/loop}
+
 {/custom_render_form_field}
 
+
+
 {form_field form=$form field="document_id"}
+
 <div class="form-group">
+
     <label class="control-label" for="{$label_attr.for}">
+
         {$label}
+
         {if $required}<span class="required">*</span>{/if}
+
     </label>
+
+
 
     {form_error form=$form field="document_id"}{$message}{/form_error}
+
     <span class="label-help-block">{intl l="Use Ctrl+click to select (or deselect) more that one item"}</span>
+
     <select class="form-control" name="{$name}" multiple id="{$label_attr.for}">
-        {loop type='documents-sharing-document' name='document-all-list'}
-        <option value="{$ID}" {if $ID==$DOCUMENT_ID}selected{/if}>{$TITLE} - {$FILE|basename}</option>
+
+        {loop type='documents-sharing-document' name='document-all-list' order='title'}
+
+        <option value="{$ID}" {if $ID==$DOCUMENT_ID}selected{/if}>{$TITLE}</option>
+
         {/loop}
+
     </select>
+
     <!--input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$DOCUMENT_ID}" placeholder="{intl l='The DocumentsSharing document_id'}" /-->
+
 </div>
+
 {/form_field}
+
 {form_field form=$form field="customer_id"}
+
 <div class="form-group">
+
     <label class="control-label" for="{$label_attr.for}">
+
         {$label}
+
         {if $required}<span class="required">*</span>{/if}
+
     </label>
+
+
 
     {form_error form=$form field="customer_id"}{$message}{/form_error}
+
     <select class="form-control" name="{$name}" id="{$label_attr.for}">
+
         <option value="">{intl l="Select a Customer" d="documentssharing.bo.default"}</option>
+
         {loop type='customer' name='customer-all-list' current=false}
+
         <option value="{$ID}" {if $ID==$CUSTOMER_ID}selected{/if}>{$FIRSTNAME} {$LASTNAME}</option>
+
         {/loop}
+
     </select>
+
     <!--input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$CUSTOMER_ID}" placeholder="{intl l='The DocumentsSharing customer_id'}" /-->
+
 </div>
+
 {/form_field}
+
 {form_field form=$form field="groupe_id"}
+
 <div class="form-group">
+
     <label class="control-label" for="{$label_attr.for}">
+
         {$label}
+
         {if $required}<span class="required">*</span>{/if}
+
     </label>
 
+
+
     {form_error form=$form field="groupe_id"}{$message}{/form_error}
+
     <select class="form-control" name="{$name}" id="{$label_attr.for}">
+
         <option value="">{intl l="Select a Customer" d="documentssharing.bo.default"}</option>
+
         {loop type='documents-sharing-groupe' name='groupe-all-list' current=false}
+
         <option value="{$ID}" {if $ID==$GROUPE_ID}selected{/if}>{$TITLE}</option>
+
         {/loop}
+
     </select>
+
     <!--input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$GROUPE_ID}" placeholder="{intl l='The DocumentsSharing groupe_id'}" /-->
+
 </div>
+
 {/form_field}
+
 {form_field form=$form field="date_end_share"}
+
 <div class="form-group">
+
     <label class="control-label" for="{$label_attr.for}">
+
         {$label}
+
         {if $required}<span class="required">*</span>{/if}
+
     </label>
+
+
 
     {form_error form=$form field="date_end_share"}{$message}{/form_error}
 
+
+
     <div class='input-group date do-picker-datetime'>
+
         <input type="{$type}" class="form-control datetime-picker"
+
                data-date-format="{$label_attr.moment_js_date_format}"
+
                {if $DATE_END_SHARE}value="{format_date date=$DATE_END_SHARE format=$label_attr.php_datetime_format}"{/if}
+
         name="{$name}" id="{$label_attr.for}" placeholder="{intl l={$label_attr.php_datetime_format} d='documentssharing.bo.default'}" />
+
         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+
     </div>
+
 </div>
+
 {/form_field}
+
 {form_field form=$form field="delete_file_after"}
+
 <div class="form-group">
+
     <label class="control-label" for="{$label_attr.for}">
+
         {$label}
+
         {if $required}<span class="required">*</span>{/if}
+
     </label>
+
+
 
     {form_error form=$form field="delete_file_after"}{$message}{/form_error}
 
+
+
     <input type="checkbox" name="{$name}" id="{$label_attr.for}" {if $DELETE_FILE_AFTER}checked{/if} placeholder="{intl l='The DocumentsSharing delete_file_after' d='documentssharing.bo.default'}" />
+
     <div id="alertDeleteAfter" class="alert alert-danger" role="alert"></div>
+
     <div id="alertDeleteAfter-info" class="alert alert-info" role="alert">{intl l="Attention: the document(s) will not be deleted" d='documentssharing.bo.default'}</div>
+
 </div>
+
 {/form_field}
+
 {/capture}
+
+
 
 {include file="includes/generic-create-dialog.html"
 
 
+
+
+
 dialog_id       = "documents_sharing-create"
+
 dialog_title    = {intl l="Create an entry of DocumentsSharing" d="documentssharing.bo.default"}
+
 dialog_body     = {$smarty.capture.documents_sharing_create nofilter}
 
+
+
 dialog_ok_label     = {intl l="Create"}
+
 dialog_cancel_label = {intl l="Cancel"}
 
+
+
 form_action        = {url path='/admin/module/DocumentsSharing/documents_sharing'}
+
 form_enctype       = {form_enctype form=$form}
+
 }
+
 {/form}
+
+
+
 
 
 {* DELETE modal *}
 
+
+
 {capture "documents_sharing_delete"}
+
 {intl l="Do you really want to delete this DocumentsSharing entry ?" d="documentssharing.bo.default"}
+
 <input type="hidden" name="documents_sharing_id" id="documents_sharing_delete_id" value="" />
+
 {/capture}
+
+
 
 {include file="includes/generic-confirm-dialog.html"
 
+
+
 dialog_id       = "documents_sharing-delete"
+
 dialog_title    = {intl l="Delete an entry of DocumentsSharing" d="documentssharing.bo.default"}
+
 dialog_message  = {$smarty.capture.documents_sharing_delete nofilter}
 
+
+
 dialog_ok_label     = {intl l="Delete"}
+
 dialog_cancel_label = {intl l="Cancel"}
 
+
+
 form_action         = {token_url path='/admin/module/DocumentsSharing/documents_sharing/delete'}
+
 }

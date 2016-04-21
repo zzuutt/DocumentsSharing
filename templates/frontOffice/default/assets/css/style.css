@@ -1,3 +1,23 @@
 .files:not(:last-child) {
+
     border-bottom: 1px solid #eee;
+
+}
+
+.title-file-download {
+  font-weight: bold;
+  font-size:1.1em;
+  color:#6699FF;
+}
+
+.summary-share{
+  text-transform:none;
+}
+
+.information-file-download {
+  font-size:1em;
+}
+.information-file-download footer {
+  color:#C0C0C0;
+
 }
