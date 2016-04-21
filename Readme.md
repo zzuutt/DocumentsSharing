@@ -19,9 +19,11 @@ In the tools menu, a new page displays comments and let you manage them.
 
 In the front office, an integration is provided for the default template. It uses hooks, so it's activated by default.
 
+A log file is created for monitoring
+
 ## Hook
 
-If your module use one or more hook, fill this part. Explain which hooks are used.
+use standard hook **account.additional**
 
 
 ## Loop

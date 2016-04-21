@@ -69,11 +69,16 @@
     <span class="label-help-block">{intl l="Use Ctrl+click to select (or deselect) more that one item"}</span>
 
     <select class="form-control" name="{$name}" multiple id="{$label_attr.for}">
+<<<<<<< HEAD
 
         {loop type='documents-sharing-document' name='document-all-list' order='title'}
 
         <option value="{$ID}" {if $ID==$DOCUMENT_ID}selected{/if}>{$TITLE}</option>
 
+=======
+        {loop type='documents-sharing-document' name='document-all-list'}
+        <option value="{$ID}" {if $ID==$DOCUMENT_ID}selected{/if}>{$TITLE}</option>
+>>>>>>> origin/master
         {/loop}
 
     </select>
@@ -285,5 +290,9 @@ dialog_cancel_label = {intl l="Cancel"}
 
 
 form_action         = {token_url path='/admin/module/DocumentsSharing/documents_sharing/delete'}
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> origin/master
